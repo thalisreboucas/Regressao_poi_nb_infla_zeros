@@ -31,4 +31,15 @@ Vamos explicar um pouco sobre
 
 ⬜ Aplicação no R!
 
-## Regressão Poisson
+
+# Vamos lá!
+
+## Distribuição Poisson
+Primeiro vamos da falar sobre distribuição poisson:
+ - É utilizadas para dados que envolvem dados de contagem.
+ - É utilizada em dados discretos.
+ - Suporte de zero a infinito.
+ - Esperança é igual a variância ($\lambda$)
+ 
+ ## Regressão Poisson
+
