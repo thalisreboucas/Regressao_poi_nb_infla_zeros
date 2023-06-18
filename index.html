@@ -334,14 +334,15 @@ Thalis Rebouças e Robert Oliveira
 </div>
 </div>
 
-  <p class="date">6/1/23</p>
+  <p class="date">6/20/23</p>
 </section>
 <section class="slide level2">
 <h2>Sumário de aprendizagem</h2>
 <p>Vamos explicar um pouco sobre</p>
 <p>⬜ O que é o Regressão Poisson?</p>
+<p>⬜ O que é o Regressão Poisson?</p>
 <p>⬜ O que é o Regressão Binomial Negativa?</p>
-<p>⬜ O que é inflacionada por zeros?</p>
+<p>⬜ O que é o que é ser inflâcionada por zeros?</p>
 <p>⬜ Exemplo de aplicação real</p>
 <p>⬜ Aplicação no R!</p>
 </section>
@@ -352,22 +353,75 @@ Thalis Rebouças e Robert Oliveira
 </section>
 <section class="slide level2">
 <h2>Distribuição Poisson</h2>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-1-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+<h2>Resumo sobre essa distribuição</h2>
 <p>Primeiro vamos da falar sobre distribuição poisson:</p>
 <p><span class="math display">\[ f(x) = P(X=x) = \dfrac{e^{-\lambda}\lambda^x}{x!}I_{(0,\infty)}\]</span></p>
 <ul>
 <li><p>É utilizadas para dados que envolvem dados de contagem.</p></li>
 <li><p>É utilizada em dados discretos.</p></li>
 <li><p>Suporte de zero a infinito.</p></li>
-<li><p>Esperança é igual a variância (<span class="math inline">\(\lambda\)</span>)</p></li>
+<li><p>A esperança é igual a variância (<span class="math inline">\(\lambda\)</span>);Equidispersão.</p></li>
+<li><p>Soma <span class="math inline">\(n\)</span> v.a.s independetes de poisson lambda é igual a soma dos lambdas.</p></li>
+</ul>
+</section>
+<section class="slide level2">
+<h2>Padrões em processos de contagem</h2>
+<ul>
+<li><p>Equidisperssão (Var(Y) = E(Y)) <em>Padrão aleatório</em></p></li>
+<li><p>Subdispersão (Var(Y) &lt; E(Y)) <em>Padrão Uniforme</em></p></li>
+<li><p>Subdispersão (Var(Y) &gt; E(Y)) <em>Padrão agragado</em></p></li>
+</ul>
+</section>
+<section class="slide level2">
+<h2>Caso especiais da Poisson</h2>
+<ul>
+<li>Temos uma distribuição binomial(<span class="math inline">\(n,\pi\)</span>) e caso o limite de n for para <span class="math inline">\(\infty\)</span> e <span class="math inline">\(\pi\)</span> tende a zero, com <span class="math inline">\(\lambda = n\pi\)</span> :</li>
+</ul>
+<p><span class="math display">\[
+\lim_{n \rightarrow \infty \ \ \pi \rightarrow 0} \left[ {n \choose k}
+\left(\dfrac{\lambda}{n}\right)^k \left(1 - \dfrac{\lambda}{n}\right)^{n-k} \right] = \dfrac{e^\lambda\lambda^k}{k!}
+\]</span></p>
+<ul>
+<li>Resultado do processo estocástico de Poisson, em que os eventos contados ocorrem <em>aleatoriamente</em> ao longo do tempo, espaço ,etc.</li>
 </ul>
 </section></section>
+<section>
 <section class="title-slide slide level1 center">
 <h1>Regressão Poisson</h1>
+
+</section>
+<section class="slide level2">
+<h2>Definição</h2>
+<ul>
+<li><p>Modelo de regressão Poisson ou Log linear de Poisson é comumente utilizado em análise de dados de contagem.</p></li>
+<li><p>As pressuposições desse modelo é inerente a distribuição Poisson.</p></li>
+</ul>
+</section>
+<section class="slide level2">
+<h2>Especificação do modelo</h2>
+<ul>
+<li>Seja <span class="math inline">\(Y\)</span> um variável aleatória independetes com covariáveis <span class="math inline">\(x_i \ ,\ I_{i(1,..,n)}\)</span></li>
+</ul>
+<p><span class="math display">\[
+f(y_i|x_i) = \dfrac{e^{-\mu_i}(\mu_i)^{y_i}}{y_i!} , I_{y(0,1,2,...,\infty)}
+\]</span></p>
+<ul>
+<li>Sendo as cováriaveis do modelo :</li>
+</ul>
+<p><span class="math display">\[
+\ln(\mu_i) = x_i'\beta ,
+\]</span> Em que <span class="math inline">\(\beta\)</span>(beta) é o vetor de parâmetros do regressão.</p>
+</section>
+<section class="slide level2">
+<h2>Propriedades</h2>
 
 <img src="images/logo.png" class="slide-logo r-stretch"><div class="footer footer-default">
 <p>Slides por <a href="Thalisreboucas.com.br">Thalis e Robert</a> (<span class="citation" data-cites="thalisreboucas">@thalisreboucas</span>), feito em <a href="https://quarto.org/docs/presentations/revealjs/index.html">Quarto</a>. Código disponível <a href="">no GitHub</a>.</p>
 </div>
-</section>
+</section></section>
     </div>
   </div>
 
@@ -579,6 +633,44 @@ Thalis Rebouças e Robert Oliveira
         ]
       });
     </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {

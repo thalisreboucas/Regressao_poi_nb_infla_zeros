@@ -25,7 +25,7 @@ Vamos explicar um pouco sobre
 
 ⬜ O que é o Regressão Binomial Negativa?
 
-⬜ O que é inflacionada por zeros?
+⬜ O que é o que é ser inflâcionada por zeros?
 
 ⬜ Exemplo de aplicação real
 
@@ -35,6 +35,17 @@ Vamos explicar um pouco sobre
 # Vamos lá!
 
 ## Distribuição Poisson
+
+*colocar novo grafico*
+
+```{r}
+
+ggplot2::ggplot(transform(data.frame(x=c(0:10)), y=dpois(x, 2)), ggplot2::aes(x, y)) + 
+   ggplot2::geom_histogram(stat="identity",alpha = .5,fill = "blue" ,col = "blue") + see::theme_modern() 
+```
+
+
+## Resumo sobre essa distribuição
 
 Primeiro vamos da falar sobre distribuição poisson:
 
@@ -46,9 +57,88 @@ $$ f(x) = P(X=x) = \dfrac{e^{-\lambda}\lambda^x}{x!}I_{(0,\infty)}$$
 
 - Suporte de zero a infinito.
 
-- Esperança é igual a variância ($\lambda$)
+- A esperança é igual a variância ($\lambda$);Equidispersão.
+
+- Soma $n$ v.a.s independetes de poisson lambda é igual a soma dos lambdas.
+
+## Padrões em processos de contagem
+
+- Equidisperssão (Var(Y) = E(Y)) *Padrão aleatório* 
+
+- Subdispersão (Var(Y) < E(Y)) *Padrão Uniforme*
+
+- Subdispersão (Var(Y) > E(Y)) *Padrão agragado*
+
+## Caso especiais da Poisson
+
+ - Temos uma distribuição binomial($n,\pi$) e caso o limite de n for para $\infty$ e $\pi$ tende a zero, com $\lambda = n\pi$ :
+ 
+ $$
+ \lim_{n \rightarrow \infty \ \ \pi \rightarrow 0} \left[ {n \choose k} 
+ \left(\dfrac{\lambda}{n}\right)^k \left(1 - \dfrac{\lambda}{n}\right)^{n-k} \right] = \dfrac{e^\lambda\lambda^k}{k!}
+ $$
+ 
+ - Resultado do processo estocástico de Poisson, em que os eventos contados ocorrem
+*aleatoriamente* ao longo do tempo, espaço ,etc.
 
 # Regressão Poisson
 
+## Definição 
 
+- Modelo de regressão Poisson ou Log linear de Poisson é comumente utilizado em análise de dados de contagem.
 
+- As pressuposições desse modelo é inerente a distribuição Poisson.
+
+*colocar um grafico*
+
+## Especificação do modelo 
+
+- Seja $Y$ um variável aleatória independetes com covariáveis $x_i \ ,\ I_{i(1,..,n)}$
+
+$$
+f(y_i|x_i) = \dfrac{e^{-\mu_i}(\mu_i)^{y_i}}{y_i!} , I_{y(0,1,2,...,\infty)}
+$$
+
+- Sendo as cováriaveis do modelo :
+
+$$
+\ln(\mu_i) = x_i'\beta ,
+$$
+Em que $\beta$(beta) é o vetor de  parâmetros do regressão.
+
+## Propriedades
+
+- $f(y_{i}|\boldsymbol{x_{i}})=\frac{e^{-\exp(\boldsymbol{x'_i\beta})}{\exp({\boldsymbol{x'_i\beta}})}^{y_i}}{y_i!}$
+
+- $E\left [ y_{i}|\boldsymbol{x_{i}} \right ]= \mu_{i}=\exp\left ( \boldsymbol{x'_{i}\beta} \right )$
+
+- $Var\left [ y_{i}|\mathbf{x_{i}} \right ]= \mu_{i}=\exp\left ( \boldsymbol{x'_{i}\beta} \right )$
+
+## Estimação por Máxima Verossimilhança
+
+- Log-verossimilhança: $l(\boldsymbol{\beta})=\sum_{i=1}^{n} \{ y_{i}\boldsymbol{x_{i}'\beta}-\exp{(\boldsymbol{x_{i}'\beta})}\}-\ln(y_{i}!));$
+
+- Vetir escore: $\boldsymbol{S}(\boldsymbol{\beta})=\frac{\partial l(\boldsymbol{\beta};\boldsymbol{y})}{\partial \boldsymbol{\beta}}=              \sum_{i=1}^{n}(y_{i}-\exp(\boldsymbol{x_{i}'\beta}))\boldsymbol{x_{i}};$
+              
+-  Matriz Informação: $\boldsymbol{I({\beta})} = \sum_{i=1}^n \mu_i \boldsymbol{x_i x'_i}  = \exp{(\boldsymbol{x'_i \beta})\boldsymbol{x_i x'_i}};$
+              
+- Distribuição assintótica: $\boldsymbol{\hat{\beta}} \overset{a}{\sim} N \left ( \boldsymbol{\beta}, \left [ \sum_{i=1}^n \mu_i \boldsymbol{x_i x'_i} \right ]^{-1} \right );$        
+## Modelo Linear Generalizado    
+
+A Regressão Poisson é um caso particular dos Modelos Lineares Generalizados (MLG). Algumas propriedades dessa classe de modelos:
+
+- Os estimadores são consistentes ainda que a distribuição especificada seja incorreta, mas desde que a média condicional de $Y$ seja declarada corretamente;
+
+- Os erros padrões, intervalos de confiança e testes de hipóteses, no entanto, ficam comprometidos;
+
+O ajuste de um MLG requer apenas a especificação:
+
+- Da esperança de $Y$ condicional às covariáveis, mediante especificação do preditor linear e da função de ligação;
+
+- Da variância condicional, mediante especificação da função de variância $V(\mu)$, possível inclusão do parâmetro de dispersão $(\phi)$, ou sua estimação por métodos robustos (abordagem de Quase-Verossimilhança).
+
+# Vamos para agora para Distribuição binomial negativa
+
+## Distribuição 
+              
+              
