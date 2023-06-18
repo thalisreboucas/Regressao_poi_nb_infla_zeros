@@ -9,7 +9,7 @@ format:
     height: 900
     self-contained: false
     incremental: false
-    footer: "Slides por [Thalis e Robert](Thalisreboucas.com.br) (@thalisreboucas), feito em [Quarto](https://quarto.org/docs/presentations/revealjs/index.html). Código disponível [no GitHub]()."
+    footer: "Slides por [Thalis e Robert](Thalisreboucas.com.br) (@thalisreboucas), feito em [Quarto](https://quarto.org/docs/presentations/revealjs/index.html). Código disponível [no GitHub](https://github.com/thalisreboucas/Regressao_poi_nb_infla_zeros)."
     theme: ["custom.scss"]
     slide-number: c/t
     show-slide-number: all
@@ -123,6 +123,7 @@ Em que $\beta$(beta) é o vetor de  parâmetros do regressão.
 -  Matriz Informação: $\boldsymbol{I({\beta})} = \sum_{i=1}^n \mu_i \boldsymbol{x_i x'_i}  = \exp{(\boldsymbol{x'_i \beta})\boldsymbol{x_i x'_i}};$
               
 - Distribuição assintótica: $\boldsymbol{\hat{\beta}} \overset{a}{\sim} N \left ( \boldsymbol{\beta}, \left [ \sum_{i=1}^n \mu_i \boldsymbol{x_i x'_i} \right ]^{-1} \right );$        
+
 ## Modelo Linear Generalizado    
 
 A Regressão Poisson é um caso particular dos Modelos Lineares Generalizados (MLG). Algumas propriedades dessa classe de modelos:
@@ -130,6 +131,8 @@ A Regressão Poisson é um caso particular dos Modelos Lineares Generalizados (M
 - Os estimadores são consistentes ainda que a distribuição especificada seja incorreta, mas desde que a média condicional de $Y$ seja declarada corretamente;
 
 - Os erros padrões, intervalos de confiança e testes de hipóteses, no entanto, ficam comprometidos;
+
+## Modelo Linear Generalizado   
 
 O ajuste de um MLG requer apenas a especificação:
 
@@ -139,6 +142,115 @@ O ajuste de um MLG requer apenas a especificação:
 
 # Vamos para agora para Distribuição binomial negativa
 
-## Distribuição 
-              
-              
+## Distribuição binomial negativa
+
+- Distribuição de probabilidades:
+$$
+P(Y=k) = \left ( \begin{matrix}
+r+k-1\\
+r-1
+\end{matrix} \right ) (1-p)^rp^k, \hspace{0,2cm} I_{k(0,1,2,...,\infty)}
+$$
+sendo $r=\alpha$ e $p=\lambda/(\lambda+\alpha),$ com $0<p<1$ e $r>0$.
+
+- Modelagem do número de "sucessos" até o r-ésimo "fracasso" ($r = 1,2,3,...$), configurando uma generalização da distribuição geométrica (para $r=1$).
+
+- Modelagem de alguns tipos de processos pontuais envolvendo contágio
+
+
+## Outra forma da Binomial Negativa
+
+- Função de probabilidades:
+$$
+P(Y=k)=\frac{\Gamma(\alpha+k)}{\Gamma(k+1)\Gamma(\alpha)}\left ( \frac{\lambda}{\lambda+\alpha} \right )^{k} \left( \frac{\alpha}{\lambda+\alpha} \right )^{\alpha}, k=0,1,2,...; \alpha > 0, \lambda>0
+$$
+
+$$
+E(Y)=\lambda 
+$$
+
+$$
+Var(Y)= \lambda+ \alpha^{-1} \lambda^2
+$$
+- Assim, para qualquer $\alpha>0$, temos $Var(Y)>\lambda$.
+
+- A distribuição binomial negativa tem como caso limite distribuição Poisson, quando $\alpha \rightarrow \infty$.
+
+## Propriedade 
+
+- A principal propriedade para a distribuição binomial negativa é que em um processo de contagem heterogêneo, em que $Y \sim Poisson( \theta)$ e $\theta$ tem distribuição $Gama(\alpha, \beta):$
+
+$$
+g\left ( \theta;\alpha,\beta \right )=\frac{\beta^{\alpha}}{\Gamma\left ( \alpha \right )}\theta^{\alpha-1}e^{-\beta \theta},\quad \alpha, \beta, \nu>0,
+$$
+
+com $E(\theta)=\theta=\alpha /\beta$ e variância $Var(\theta)=\alpha /\beta^2.$
+
+- Como resultado, temos uma mistura Poisson-Gamma, resultando, marginalmente (em relação a $\theta$), na distribuição binomial negativa.
+
+
+
+## Comparação Binomial Negativa x Poisson
+
+*colocar grafico*
+
+## Regressçao binomial Negativa
+
+- O modelo de regressão com resposta binomial negativa pode ser especificado fazendo $E(y|\boldsymbol{x})=\exp(\boldsymbol{x'\beta}).$
+
+- Para valores fixados de $\alpha$, a distribuição binomial negativa fica expressa na forma da família exponencial linear, contemplada pela teoria de MLG.
+
+- A estimação dos parâmetros do modelo se dá numericamente, segundo um algoritmo em duas etapas, em que $\alpha$ e $\boldsymbol{\beta}$ são estimados condicionalmente até convergência.
+
+# O que é ser Inflacionda de *zeros* ?
+
+
+## Excessos de zeros
+
+- Casos em que a proporção de valores nulos na amostra é superior
+    àquela estimada por um modelo de contagem. No caso Poisson
+    $e^{-\lambda}$
+    
+- Geralmente contagens com um número excessivo de valores nulos
+    apresentam superdispersão (ocasionada pelo excesso de zeros).
+
+- Os modelos mais flexíveis abordados não capturam esse excesso de
+    zeros e não se ajustam adequadamente.
+
+## Excessos de zeros
+
+*colocar grafico *
+
+## Causas desses zeros 
+
+- Uma limitação das abordagens estudadas é que as contagens nulas e não nulas são provenientes do mesmo processo gerador dos dados.
+    
+- Para dados com excesso de zeros, é razoável a suposição da haver mais de um processo gerador atuando na geração dos dados.
+    
+-  Assim a ocorrência de valores nulos podem ser caracterizada
+    como:
+
+  - *zeros amostrais*: Ocorrem segundo um processo gerador
+        de contagens (e.g Processo Poisson).
+        
+  - *zeros estruturais*: Ausência de determinada característica da população.
+  
+ *Exemplo*: Um estudo que visa avaliar a quantidade de produtos comprados em um mercado por uma família na última semana. A variável de interesse é o número de itens comprados.
+
+- zeros estruturais: Se a família não foi ao mercado na última semana. Inevitavelmente o número de produtos será 0.
+
+- zeros amostrais: A família foi ao mercado, porém não adquiriu nenhum produto.
+
+# Como modelar esses zeros ?
+
+## Modelagem para contagens com excesso de zeros
+
+Como há dois processos que geram os valores da população, na modelagem
+deve-se considerar ambos. As principais abordagens nestes casos são via:
+
+- *Modelos de barreira* (Hurdle Models): que desconsidera os zeros amostrais e modela os zeros estruturais e as contagens positivas. 
+    
+- *Modelos de mistura* (Zero Inflated Models): que modela os zeros (estruturais e amostrais) em conjunto com as contagens positivas .
+
+
+# Modelo Zero Inflated
