@@ -1,7 +1,7 @@
 ---
 title: "Regressão Poisson e Binomial Negativa inflâcionada de **ZEROS!!!**"
 author: "Thalis Rebouças e Robert Oliveira"
-date: "Junho 2023"
+date: "20 Junho 2023"
 format: 
   revealjs:
     logo: "images/logo.png"
@@ -35,11 +35,20 @@ Vamos explicar um pouco sobre
 # Vamos lá!
 
 ## Distribuição Poisson
+
 Primeiro vamos da falar sobre distribuição poisson:
- - É utilizadas para dados que envolvem dados de contagem.
- - É utilizada em dados discretos.
- - Suporte de zero a infinito.
- - Esperança é igual a variância ($\lambda$)
- 
- ## Regressão Poisson
+
+$$ f(x) = P(X=x) = \dfrac{e^{-\lambda}\lambda^x}{x!}I_{(0,\infty)}$$
+
+- É utilizadas para dados que envolvem dados de contagem.
+
+- É utilizada em dados discretos.
+
+- Suporte de zero a infinito.
+
+- Esperança é igual a variância ($\lambda$)
+
+# Regressão Poisson
+
+
 
