@@ -45,89 +45,13 @@ p1 <- ggplot2::ggplot() +
         ggplot2::lims(y=c(0,1))+
           ggplot2::geom_area(ggplot2::aes(x, y),p05,alpha = .5,fill = "blue" )+
             ggplot2::geom_area(ggplot2::aes(x, y),p4,alpha = .5,fill = "black" )+
-              ggplot2::geom_area(ggplot2::aes(x, y),p2,,alpha = .5,fill = "purple")+
+              ggplot2::geom_area(ggplot2::aes(x, y),p2,alpha = .5,fill = "purple")+
                 ggplot2::ggtitle("Distribuições Poisson") +
       see::theme_modern()
 
-plotly::ggplotly(p1) |> 
-# Adicionando um Marcador 
- plotly::add_markers(
-    x = 8.9,
-    y = 0.8, 
-    marker = list(
-# Colocando cor e tamanho 
-    color = 'blue',
-    size = 10))  |> 
- plotly::add_annotations(
- # Posicionando o texto      
-      x=9,  y=0.8,  
-      xref = "x",  
-      yref = "y", 
-#Colocando um texto 
-text = "Lambda = 0,5", 
-# colocando alinhamento a esquerda
- xanchor = 'left',
-# tirando a seta 
- showarrow = F , 
- font = list(
-#cor do texto
- color = 'black', 
-#fonte do texto
- family = 'calibri light', 
-#tamanho da fonte
-  size = 14)  ) |> 
-  plotly::add_markers(
-    x = 8.9,
-    y = 0.7, 
-    marker = list(
-# Colocando cor e tamanho 
-    color = 'black',
-    size = 10))  |> 
-  plotly::add_annotations(
- # Posicionando o texto      
-      x=9,  y=0.7,  
-      xref = "x",  
-      yref = "y", 
-#Colocando um texto 
-text = "Lambda = 2", 
-# colocando alinhamento a esquerda
- xanchor = 'left',
-# tirando a seta 
- showarrow = F , 
- font = list(
-#cor do texto
- color = 'black', 
-#fonte do texto
- family = 'calibri light', 
-#tamanho da fonte
-  size = 14)  ) |> 
- plotly::add_markers(
-    x = 8.9,
-    y = 0.6, 
-    marker = list(
-# Colocando cor e tamanho 
-    color = 'purple',
-    size = 10))  |> 
- plotly::add_annotations(
- # Posicionando o texto      
-      x=9,  y=0.6,  
-      xref = "x",  
-      yref = "y", 
-#Colocando um texto 
-text = "Lambda = 4", 
-# colocando alinhamento a esquerda
- xanchor = 'left',
-# tirando a seta 
- showarrow = F , 
- font = list(
-#cor do texto
- color = 'black', 
-#fonte do texto
- family = 'calibri light', 
-#tamanho da fonte
-  size = 14)  )
-
+p1
 ```
+
 
 
 ## Resumo sobre essa distribuição
