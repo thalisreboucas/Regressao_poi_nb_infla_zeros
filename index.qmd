@@ -47,6 +47,9 @@ p1 <- ggplot2::ggplot() +
             ggplot2::geom_area(ggplot2::aes(x, y),p4,alpha = .5,fill = "black" )+
               ggplot2::geom_area(ggplot2::aes(x, y),p2,alpha = .5,fill = "purple")+
                 ggplot2::ggtitle("Distribuições Poisson") +
+                 ggplot2::annotate("text",y = 1,x = 7.5,label = "lambda igual a 0,5",color= "blue",)+
+                 ggplot2::annotate("text",y = 0.9,x = 7.5,label = "lambda igual a 4",color= "black")+
+                 ggplot2::annotate("text",y = 0.8,x = 7.5,label = "lambda igual a 2",color= "purple")+
       see::theme_modern()
 
 p1
@@ -76,7 +79,7 @@ $$ f(x) = P(X=x) = \dfrac{e^{-\lambda}\lambda^x}{x!}I_{(0,\infty)}$$
 
 - Subdispersão (Var(Y) < E(Y)) *Padrão Uniforme*
 
-- Subdispersão (Var(Y) > E(Y)) *Padrão agragado*
+- Superdispersão (Var(Y) > E(Y)) *Padrão agragado*
 
 ## Caso especiais da Poisson
 
@@ -203,7 +206,23 @@ com $E(\theta)=\theta=\alpha /\beta$ e variância $Var(\theta)=\alpha /\beta^2.$
 
 ## Comparação Binomial Negativa x Poisson
 
-*colocar grafico*
+```{r}
+p2 <- transform(data.frame(x=c(0:10)) , y=dpois(x, 2))
+b2 <- transform(data.frame(x=c(0:10)) , y=dnbinom(x,2,1/2))
+p10 <- transform(data.frame(x=c(0:10)) , y=dpois(x, 10))
+b10 <- transform(data.frame(x=c(0:10)) , y=dnbinom(x,10,1/2))
+ ggplot2::ggplot() + 
+        ggplot2::lims(y=c(0,.35))+
+          ggplot2::geom_area(ggplot2::aes(x, y),p2,alpha = .5,fill = "blue" )+
+            ggplot2::geom_area(ggplot2::aes(x, y),b2,alpha = .5,fill = "black" )+
+             ggplot2::geom_area(ggplot2::aes(x, y),p10,alpha = .5,fill = "blue" )+
+               ggplot2::geom_area(ggplot2::aes(x, y),b10,alpha = .5,fill = "black" )+
+                ggplot2::ggtitle("Distribuições Poisson") +
+      see::theme_modern()
+
+
+```
+
 
 ## Regressçao binomial Negativa
 
