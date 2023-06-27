@@ -555,13 +555,45 @@ g\left ( \theta;\alpha,\beta \right )=\frac{\beta^{\alpha}}{\Gamma\left ( \alpha
 <li><p><em>Modelos de mistura</em> (Zero Inflated Models): que modela os zeros (estruturais e amostrais) em conjunto com as contagens positivas .</p></li>
 </ul>
 </section></section>
+<section>
 <section class="title-slide slide level1 center">
 <h1>Modelo Zero Inflated</h1>
+
+</section>
+<section class="slide level2">
+<h2>O que é esse modelo ?</h2>
+<p>É um modelo que considera uma mistura de modelos,ou seja, seria um modelo sem restrições ou trucamentos e outros com restrições à direita do ponto <span class="math inline">\(y\)</span> igual a um.Além disso, os zeros são caracterizados em amostrais e estruturais.</p>
+</section>
+<section class="slide level2">
+<h2>Definições</h2>
+<h4>Distribuição de Probabilidade</h4>
+<p><span class="math display">\[
+Pr(Y=y) = \begin{cases} f_z(0) + 1(-f_z(0))f_c(Y=y) ,&amp;\ se \ y =0 \\
+(1-f_z(0))f_c(Y=y) ,&amp; \ se \ y &gt; \ 0   \end{cases}
+\]</span> #### Momentos</p>
+<ul>
+<li>Média</li>
+</ul>
+<p><span class="math display">\[
+E(Y) = 1-f_z(0)E(Y^*)
+\]</span></p>
+<ul>
+<li>Variância</li>
+</ul>
+<p><span class="math display">\[
+Var(Y) = 1-f_z(0)E(Y^*) [E(Y^{*^2})-(1-f_z(0)E^2(Y^*))]
+\]</span> ## Distribuição zero Inflated</p>
+<ul>
+<li><p>Temos um modelo de mistura Y com duas funções(<span class="math inline">\(f_Z \ e \ f_c\)</span>)</p></li>
+<li><p><span class="math inline">\(f_z\)</span> é um função de probabilidade com muitos valores no ponto zero, ou seja, degenerada no ponto y igual a zero.</p></li>
+<li><p><span class="math inline">\(f_c\)</span> é uma função pde probabilidades para dados de contagem.</p></li>
+</ul>
+<p><em>obs:</em> Mesmo assim <span class="math inline">\(f_c\)</span> pode apresntar sub,superdispersão ou excesso de valores em outro ponto.</p>
 
 <img src="images/logo.png" class="slide-logo r-stretch"><div class="footer footer-default">
 <p>Slides por <a href="Thalisreboucas.com.br">Thalis e Robert</a> (<span class="citation" data-cites="thalisreboucas">@thalisreboucas</span>), feito em <a href="https://quarto.org/docs/presentations/revealjs/index.html">Quarto</a>. Código disponível <a href="https://github.com/thalisreboucas/Regressao_poi_nb_infla_zeros">no GitHub</a>.</p>
 </div>
-</section>
+</section></section>
     </div>
   </div>
 

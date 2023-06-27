@@ -284,3 +284,39 @@ deve-se considerar ambos. As principais abordagens nestes casos são via:
 
 
 # Modelo Zero Inflated
+
+## O que é esse modelo ?
+
+É um modelo que considera uma mistura de modelos,ou seja, seria um modelo sem restrições ou trucamentos e outros com restrições à direita do ponto $y$ igual a um.Além disso, os zeros são caracterizados em amostrais e estruturais.
+
+## Definições 
+#### Distribuição de Probabilidade
+
+$$
+Pr(Y=y) = \begin{cases} f_z(0) + 1(-f_z(0))f_c(Y=y) ,&\ se \ y =0 \\
+(1-f_z(0))f_c(Y=y) ,& \ se \ y > \ 0   \end{cases}
+$$
+#### Momentos
+
+- Média
+
+$$
+E(Y) = 1-f_z(0)E(Y^*)
+$$
+
+- Variância 
+
+$$
+Var(Y) = 1-f_z(0)E(Y^*) [E(Y^{*^2})-(1-f_z(0)E^2(Y^*))]
+$$
+## Distribuição zero Inflated
+
+- Temos um modelo de mistura Y com duas funções($f_Z \ e \ f_c$) 
+
+- $f_z$ é um função de probabilidade com muitos valores no ponto zero, ou seja, degenerada no ponto y igual a zero.
+
+- $f_c$ é uma função pde probabilidades para dados de contagem.
+
+*obs:* Mesmo assim $f_c$ pode apresntar sub,superdispersão ou excesso de valores em outro ponto.
+
+
