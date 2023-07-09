@@ -37,22 +37,31 @@ Vamos explicar um pouco sobre
 ## Distribuição Poisson
 
 ```{r}
-p2 <- transform(data.frame(x=c(0:10)) , y=dpois(x, 2))
-p05 <- transform(data.frame(x=c(0:10)) , y=dpois(x, 0.5))
-p4 <- transform(data.frame(x=c(0:10)) , y=dpois(x, 4))
 
-p1 <- ggplot2::ggplot() + 
-        ggplot2::lims(y=c(0,1))+
-          ggplot2::geom_area(ggplot2::aes(x, y),p05,alpha = .5,fill = "blue" )+
-            ggplot2::geom_area(ggplot2::aes(x, y),p4,alpha = .5,fill = "black" )+
-              ggplot2::geom_area(ggplot2::aes(x, y),p2,alpha = .5,fill = "purple")+
-                ggplot2::ggtitle("Distribuições Poisson") +
-                 ggplot2::annotate("text",y = 1,x = 7.5,label = "lambda igual a 0,5",color= "blue",)+
-                 ggplot2::annotate("text",y = 0.9,x = 7.5,label = "lambda igual a 4",color= "black")+
-                 ggplot2::annotate("text",y = 0.8,x = 7.5,label = "lambda igual a 2",color= "purple")+
-      see::theme_modern()
+library(ggplot2)
+lambdas <- c(2, 5, 10, 15)  # Valores diferentes de lambda
 
-p1
+# Valores possíveis para o eixo x
+x_values <- 0:30
+
+# Cálculo das probabilidades para cada valor de lambda
+poisson_probs <- sapply(lambdas, function(lambda) dpois(x_values, lambda))
+
+# Criação do data frame para o gráfico
+data <- data.frame(x = rep(x_values, length(lambdas)),
+                   y = c(poisson_probs),
+                   lambda = rep(lambdas, each = length(x_values)))
+
+# Plot do gráfico
+cores <- c("black", "lightblue", "gray10", "purple4")
+
+ggplot(data, aes(x = as.factor(x), y = y, fill = as.factor(lambda))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Valores", y = "Probabilidades", fill = "Lambda") +
+  scale_fill_manual(values = cores) + 
+  ggtitle("Distribuição Poisson com Diferentes Valores de Lambda") +
+  theme_minimal()
+
 ```
 
 
@@ -102,7 +111,41 @@ $$ f(x) = P(X=x) = \dfrac{e^{-\lambda}\lambda^x}{x!}I_{(0,\infty)}$$
 - As pressuposições desse modelo é inerente a distribuição Poisson.
 
 
-![](images/Poisson.png){fig-align="center"}
+```{r}
+# Gerar dados simulados
+x <- seq(1, 10, length.out = 100)
+lambda <- exp(0.5 + 0.2 * x)
+y <- rpois(length(x), lambda)
+
+# Ajustar modelo de regressão Poisson
+model <- glm(y ~ x, family = poisson())
+
+# Prever valores ajustados
+predicted <- predict(model, type = "response", se.fit = TRUE)
+
+# Criar data frame com os valores
+data <- data.frame(x = x, y = predicted$fit, ymin = predicted$fit - 1.96 * predicted$se.fit, 
+                   ymax = predicted$fit + 1.96 * predicted$se.fit)
+
+# Obter os coeficientes estimados
+intercept <- coef(model)[1]
+slope <- coef(model)[2]
+
+# Função para formatar a fórmula estimada da reta
+format_formula <- function(intercept, slope) {
+  paste0("y = exp(", round(intercept, 2), " + ", round(slope, 2), "x)")
+}
+
+# Plot do gráfico
+ggplot() +
+  geom_ribbon(data = data, aes(x = x, ymin = ymin, ymax = ymax), fill = "lightblue", alpha = 0.5) +
+  geom_line(data = data, aes(x = x, y = y), color = "lightblue3", size = 1) +
+  geom_point(data = data.frame(x, y), aes(x = x, y = y), color = "gray10", size = 2) +
+  geom_text(x = 1, y = max(predicted$fit), label = format_formula(intercept, slope), hjust = 0, vjust = 1) +
+  labs(x = "Variável X", y = "Contagem Y", title = "Regressão Poisson") +
+  theme_minimal() 
+```
+
 
 
 ## Especificação do modelo 
@@ -207,19 +250,35 @@ com $E(\theta)=\theta=\alpha /\beta$ e variância $Var(\theta)=\alpha /\beta^2.$
 ## Comparação Binomial Negativa x Poisson
 
 ```{r}
-p2 <- transform(data.frame(x=c(0:10)) , y=dpois(x, 2))
-b2 <- transform(data.frame(x=c(0:10)) , y=dnbinom(x,2,1/2))
-p10 <- transform(data.frame(x=c(0:10)) , y=dpois(x, 10))
-b10 <- transform(data.frame(x=c(0:10)) , y=dnbinom(x,10,1/2))
- ggplot2::ggplot() + 
-        ggplot2::lims(y=c(0,.35))+
-          ggplot2::geom_area(ggplot2::aes(x, y),p2,alpha = .5,fill = "blue" )+
-            ggplot2::geom_area(ggplot2::aes(x, y),b2,alpha = .5,fill = "black" )+
-             ggplot2::geom_area(ggplot2::aes(x, y),p10,alpha = .5,fill = "blue" )+
-               ggplot2::geom_area(ggplot2::aes(x, y),b10,alpha = .5,fill = "black" )+
-                ggplot2::ggtitle("Distribuições Poisson") +
-      see::theme_modern()
+# Parâmetros das distribuições
+size <- 6  # Parâmetro "size" da distribuição binomial negativa
+prob <- 0.5  # Parâmetro "prob" da distribuição binomial negativa
+lambda <- 5  # Parâmetro "lambda" da distribuição Poisson
 
+# Valores possíveis para o eixo x
+x_values <- 0:30
+
+# Função para calcular as probabilidades da distribuição binomial negativa
+negative_binomial_probs <- function(x, size, prob) {
+  choose(x + size - 1, x) * prob^x * (1 - prob)^size
+}
+
+# Cálculo das probabilidades das distribuições binomial negativa e Poisson
+negative_binomial_probs <- negative_binomial_probs(x_values, size, prob)
+poisson_probs <- dpois(x_values, lambda)
+
+# Criação do data frame para o gráfico
+data <- data.frame(x = rep(x_values, 2),
+                   y = c(negative_binomial_probs, poisson_probs),
+                   distribuicao = rep(c("Binomial Negativa", "Poisson"), each = length(x_values)))
+
+# Plot do gráfico
+ggplot(data, aes(x = as.factor(x), y = y, fill = distribuicao)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Valores", y = "Probabilidades", fill = "Distribuição") +
+  scale_fill_manual(values = c("lightblue4", "gray10")) + 
+  ggtitle("Comparação da Distribuição Binomial Negativa e Poisson") +
+  theme_minimal()
 
 ```
 
@@ -298,7 +357,7 @@ Pr(Y=y) = \begin{cases} f_z(0) + 1(-f_z(0))f_c(Y=y) ,&\ se \ y =0 \\
 $$
 #### Momentos
 
-- Média
+ - Média
 
 $$
 E(Y) = 1-f_z(0)E(Y^*)
@@ -309,7 +368,10 @@ $$
 $$
 Var(Y) = 1-f_z(0)E(Y^*) [E(Y^{*^2})-(1-f_z(0)E^2(Y^*))]
 $$
-## Distribuição zero Inflated
+
+
+
+# Distribuição zero Inflated
 
 - Temos um modelo de mistura Y com duas funções($f_Z \ e \ f_c$) 
 
@@ -318,5 +380,42 @@ $$
 - $f_c$ é uma função pde probabilidades para dados de contagem.
 
 *obs:* Mesmo assim $f_c$ pode apresntar sub,superdispersão ou excesso de valores em outro ponto.
+
+```{r}
+# Função para calcular as probabilidades da distribuição binomial negativa
+negative_binomial_probs <- function(x, size, prob) {
+  choose(x + size - 1, x) * prob^x * (1 - prob)^size
+}
+
+# Parâmetros das distribuições
+size <- 10  # Parâmetro "size" da distribuição binomial negativa
+prob <- 0.5  # Parâmetro "prob" da distribuição binomial negativa
+lambda <- 5  # Parâmetro "lambda" da distribuição Poisson
+psi <- 0.2  # Parâmetro "psi" da distribuição Zero-Inflated Poisson
+
+# Valores possíveis para o eixo x
+x_values <- 0:30
+
+# Cálculo das probabilidades das distribuições binomial negativa, Poisson e Zero-Inflated Poisson
+negative_binomial_probs <- negative_binomial_probs(x_values, size, prob)
+poisson_probs <- dpois(x_values, lambda)
+zip_probs <- ifelse(x_values == 0, psi + (1 - psi) * dpois(x_values, lambda), (1 - psi) * dpois(x_values, lambda))
+
+# Criação do data frame para o gráfico
+data <- data.frame(x = rep(x_values, 3),
+                   y = c(negative_binomial_probs, poisson_probs, zip_probs),
+                   distribuicao = rep(c("Binomial Negativa", "Poisson", "Zero-Inflated Poisson"), each = length(x_values)))
+
+# Plot do gráfico
+
+ggplot(data, aes(x = as.factor(x), y = y, fill = distribuicao)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Valores", y = "Probabilidades", fill = "Distribuição") +
+  scale_fill_manual(values = c("gray10" , "black","lightblue4")) + 
+  ggtitle("Comparação de Distribuições Binomial Negativa, Poisson e Zero-Inflated Poisson") +
+  theme_minimal()
+
+```
+
 
 
