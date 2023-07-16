@@ -503,7 +503,7 @@ g\left ( \theta;\alpha,\beta \right )=\frac{\beta^{\alpha}}{\Gamma\left ( \alpha
 
 <img data-src="index_files/figure-revealjs/unnamed-chunk-3-1.png" width="960" class="r-stretch"></section>
 <section class="slide level2">
-<h2>Regressçao binomial Negativa</h2>
+<h2>Regressão binomial Negativa</h2>
 <ul>
 <li><p>O modelo de regressão com resposta binomial negativa pode ser especificado fazendo <span class="math inline">\(E(y|\boldsymbol{x})=\exp(\boldsymbol{x'\beta}).\)</span></p></li>
 <li><p>Para valores fixados de <span class="math inline">\(\alpha\)</span>, a distribuição binomial negativa fica expressa na forma da família exponencial linear, contemplada pela teoria de MLG.</p></li>
@@ -724,80 +724,6 @@ vglm(y ~ preditor, family = zipoisson)
 </section>
 
 <section class="title-slide slide level1 center">
-<h1>Análise Explolátoria</h1>
-<div class="cell">
-<div class="cell-output-display">
-<table>
-<colgroup>
-<col style="width: 11%">
-<col style="width: 6%">
-<col style="width: 7%">
-<col style="width: 3%">
-<col style="width: 3%">
-<col style="width: 7%">
-<col style="width: 3%">
-<col style="width: 15%">
-<col style="width: 11%">
-<col style="width: 4%">
-<col style="width: 8%">
-<col style="width: 11%">
-<col style="width: 5%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">sexo</th>
-<th style="text-align: right;">Média</th>
-<th style="text-align: right;">Mínimo</th>
-<th style="text-align: right;">Q1</th>
-<th style="text-align: right;">Q2</th>
-<th style="text-align: right;">Máximo</th>
-<th style="text-align: right;">Q3</th>
-<th style="text-align: right;">Desvio Padrão</th>
-<th style="text-align: right;">Amplitude</th>
-<th style="text-align: right;">IQR</th>
-<th style="text-align: right;">Curtose</th>
-<th style="text-align: right;">Assimtria</th>
-<th style="text-align: right;">CV</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Feminino</td>
-<td style="text-align: right;">1.47</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">1.55</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">5.49</td>
-<td style="text-align: right;">1.38</td>
-<td style="text-align: right;">1.06</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Masculino</td>
-<td style="text-align: right;">1.88</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">19</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">2.18</td>
-<td style="text-align: right;">19</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">15.70</td>
-<td style="text-align: right;">2.67</td>
-<td style="text-align: right;">1.16</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-
-<section class="title-slide slide level1 center">
 <h1>Outros Modelos</h1>
 <ul>
 <li>Modelos de Barreira Hurdle</li>
@@ -817,6 +743,10 @@ vglm(y ~ preditor, family = zipoisson)
 <li><p>Long, J. Scott. 1990. The origins of sex differences in science. Social Forces. 68(3):1297-1316.</p></li>
 <li><p>Long, J. Scott. 1997. Regression Models for Categorical and Limited Dependent Variables. Thousand Oaks, California: Sage.</p></li>
 </ul>
+</section>
+
+<section class="title-slide slide level1 center">
+<h1>Agora vamos para o R.</h1>
 
 <img src="images/logo.png" class="slide-logo r-stretch"><div class="footer footer-default">
 <p>Slides por <a href="Thalisreboucas.com.br">Thalis e Robert</a>, feito em <a href="https://quarto.org/docs/presentations/revealjs/index.html">Quarto</a>. Código disponível <a href="https://github.com/thalisreboucas/Regressao_poi_nb_infla_zeros">no GitHub</a>.</p>

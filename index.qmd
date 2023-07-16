@@ -283,7 +283,7 @@ ggplot(data, aes(x = as.factor(x), y = y, fill = distribuicao)) +
 ```
 
 
-## Regressçao binomial Negativa
+## Regressão binomial Negativa
 
 - O modelo de regressão com resposta binomial negativa pode ser especificado fazendo $E(y|\boldsymbol{x})=\exp(\boldsymbol{x'\beta}).$
 
@@ -577,32 +577,6 @@ Sendo:
 - ment: Artigos produzidos por orientador de doutorado nos últimos 3 anos
 
 
-# Análise Explolátoria 
-
-```{r}
-dados |> 
-  dplyr::mutate(sexo = dplyr::case_when(fem == "Men" ~"Masculino" ,
-                                 fem == "Women" ~"Feminino")) |> 
-  dplyr::group_by(sexo) |> 
-  dplyr::select(art) |> 
-  dplyr::summarise_all(c(
-    "Média" = mean,
-    "Mínimo" = min,
-    "Q1" = ~(quantile(.x, 0.25)),
-    "Q2" = median,
-    "Máximo" = max,
-    "Q3" = ~(quantile(.x, 0.75)),
-    "Desvio Padrão" = sd,
-    "Amplitude" = ~(max(.x)-min(.x)),
-    "IQR" = IQR,
-    "Curtose" = moments::kurtosis,
-    "Assimtria" = moments::skewness,
-    "CV" = ~(sd(.x)/mean(.x))  )) |> knitr::kable(digits = round(2))
-
-
-```
-
-
 
 # Outros Modelos 
 
@@ -629,4 +603,4 @@ New York: Marcel Dekker Inc. 1989.
 
 - Long, J. Scott. 1997. Regression Models for Categorical and Limited Dependent Variables. Thousand Oaks, California: Sage.
 
-
+# Agora vamos para o R.
