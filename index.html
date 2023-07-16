@@ -525,8 +525,8 @@ g\left ( \theta;\alpha,\beta \right )=\frac{\beta^{\alpha}}{\Gamma\left ( \alpha
 </section>
 <section class="slide level2">
 <h2>Excessos de zeros</h2>
-<p><em>colocar grafico </em></p>
-</section>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"></section>
 <section class="slide level2">
 <h2>Causas desses zeros</h2>
 <ul>
@@ -563,14 +563,17 @@ g\left ( \theta;\alpha,\beta \right )=\frac{\beta^{\alpha}}{\Gamma\left ( \alpha
 <section class="slide level2">
 <h2>O que é esse modelo ?</h2>
 <p>É um modelo que considera uma mistura de modelos,ou seja, seria um modelo sem restrições ou trucamentos e outros com restrições à direita do ponto <span class="math inline">\(y\)</span> igual a um.Além disso, os zeros são caracterizados em amostrais e estruturais.</p>
-</section>
-<section class="slide level2">
-<h2>Definições</h2>
-<h4>Distribuição de Probabilidade</h4>
+<h3>Definições</h3>
+<ul>
+<li>Distribuição de Probabilidade</li>
+</ul>
 <p><span class="math display">\[
 Pr(Y=y) = \begin{cases} f_z(0) + 1(-f_z(0))f_c(Y=y) ,&amp;\ se \ y =0 \\
 (1-f_z(0))f_c(Y=y) ,&amp; \ se \ y &gt; \ 0   \end{cases}
-\]</span> #### Momentos</p>
+\]</span></p>
+</section></section>
+<section class="title-slide slide level1 center">
+<h1>Momentos</h1>
 <ul>
 <li>Média</li>
 </ul>
@@ -583,7 +586,8 @@ E(Y) = 1-f_z(0)E(Y^*)
 <p><span class="math display">\[
 Var(Y) = 1-f_z(0)E(Y^*) [E(Y^{*^2})-(1-f_z(0)E^2(Y^*))]
 \]</span></p>
-</section></section>
+</section>
+
 <section class="title-slide slide level1 center">
 <h1>Distribuição zero Inflated</h1>
 <ul>
@@ -592,14 +596,230 @@ Var(Y) = 1-f_z(0)E(Y^*) [E(Y^{*^2})-(1-f_z(0)E^2(Y^*))]
 <li><p><span class="math inline">\(f_c\)</span> é uma função pde probabilidades para dados de contagem.</p></li>
 </ul>
 <p><em>obs:</em> Mesmo assim <span class="math inline">\(f_c\)</span> pode apresntar sub,superdispersão ou excesso de valores em outro ponto.</p>
+</section>
+
+<section class="title-slide slide level1 center">
+<h1>Comparação da Poisson,binomial e Zero Inflated</h1>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
+
+<section class="title-slide slide level1 center">
+<h1>Modelo Zero Inflated</h1>
+<p>Consideram uma mistura de modelos;</p>
+<ul>
+<li>Os zeros agora são caracterizados em amostrais e estruturais;</li>
+<li>Há contribuição para estimação da probabilidade em zero de duas funções de probabilidade;</li>
+<li>São chamados de modelos de mistura ou inflacionados de zero (Z I);</li>
+<li>Esta abordagem “mistura“ um modelo de contagem sem restrição e um modelo censurado à direita no ponto y = 1.</li>
+</ul>
+</section>
+
+<section class="title-slide slide level1 center">
+<h1>Modelo Zero Inflated</h1>
+<p>Distribuição de Probabilidade: <span class="math display">\[
+    Pr(Y = y) =
+    \begin{cases}
+        f_z(0) + (1-f_z(0))f_c(Y=y) &amp; \text{se } y = 0,\\
+            (1 - f_z(0)) f_c(Y = y) &amp; \text{se } y = 1, 2, \dots
+    \end{cases}
+\]</span> Média e Variância : <span class="math display">\[
+  \begin{cases}
+        E(Y) = (1-f_z(0)E(Y^*)\\
+        V(Y) = (1-f_z(0)E(Y^*)[ E({Y^*}^2) - (1- f_z(0)E^2(Y^*)]
+    \end{cases}
+  \]</span></p>
+</section>
+
+<section class="title-slide slide level1 center">
+<h1>Misturas mais comuns</h1>
+<p>Pode-se propor diferentes distribuições para <span class="math inline">\(f_z\)</span> e <span class="math inline">\(f_c\)</span>. Uma escolha natural para <span class="math inline">\(f_z\)</span> é a Bernoulli e para <span class="math inline">\(f_c\)</span> a Poisson. Assim</p>
+<p>$$ <span class="math display">\[\begin{align}
+    &amp;f_z \sim Bernoulli(\pi) \\
+    &amp;f_c \sim Poisson(\lambda)
+\end{align}\]</span></p>
+<span class="math display">\[
+Sendo ,
+\]</span> P(Y = y) =
+<span class="math display">\[\begin{cases}
+        (1 - \pi) + \pi e^{-\lambda} &amp; \text{se } y = 0,\\
+        \pi \left ( \frac{e^{-\lambda} \lambda^y}{y!} \right ) &amp;
+            \text{se } y = 1, 2, \dots
+    \end{cases}\]</span>
+<p>$$</p>
+<p>Embora essa escolha de modelo seja o que tem o maior suporte computacional, ressalta-se que outras distribuições podem ser escolhidas para ambas as partes <span class="math inline">\(f_z\)</span> e <span class="math inline">\(f_c\)</span>.</p>
+</section>
+
+<section class="title-slide slide level1 center">
+<h1>Fazendo Regressões com essa misturas.</h1>
+<ul>
+<li>Incorporando covariáveis em <span class="math inline">\(f_z\)</span> e <span class="math inline">\(f_c\)</span> na forma <span class="math inline">\(h(Z\gamma)\)</span> e <span class="math inline">\(g(X\beta)\)</span>, respectivamente.</li>
+<li>As funções <span class="math inline">\(h(.)\)</span> e <span class="math inline">\(g(.)\)</span>, são as funções de ligação escolhidas conforme modelos <span class="math inline">\(f_z\)</span> e <span class="math inline">\(f_c\)</span>.</li>
+<li>O modelo de regressão {} terá, portanto, os vetores de parâmetros <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\gamma\)</span> e potencialmente <span class="math inline">\(\phi\)</span> (caso um modelo com parâmetro de dispersão for considerado)</li>
+<li>Como agora são modelos misturados a comparação entre <span class="math inline">\(\beta\)</span> e <span class="math inline">\(\gamma\)</span> não tem a mesma interpretabilidade.</li>
+<li>Para comparação de modelos tradicionais contra os modelos de mistura, o teste de Vuong para modelos não aninhados pode ser aplicado.</li>
+</ul>
+</section>
+
+<section>
+<section class="title-slide slide level1 center">
+<h1>Funções de Verossimilhaça para Zero Inflated</h1>
+
+</section>
+<section class="slide level2">
+<h2>Função de verossimilhança</h2>
+<p><span class="math display">\[
+\begin{align*}
+        L(\underline{\theta}; &amp;\underline{y}) =
+        \prod_{i=1}^n \textbf{1}^* \left ( (1-f_{z_i}(0)) f_{c_i}(y_i)
+            \right ) \cdot \\
+        &amp;\prod_{i=1}^n (1-\textbf{1}^*) \left ( f_{z_i}(0) +
+        (1-f_{z_i}(0))f_{c_i}(0)
+        \right )
+    \end{align*}
+\]</span></p>
+<p>Sendo <span class="math inline">\(\textbf{1}^*\)</span> a função indicadora que assume o valor 1 se <span class="math inline">\(y &gt; 0\)</span> e 0 se <span class="math inline">\(y = 0\)</span> e <span class="math inline">\(\underline{\theta}\)</span> o vetor de parâmetros do modelo ( <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\gamma\)</span> e <span class="math inline">\(\phi\)</span>, se houver).</p>
+</section>
+<section class="slide level2">
+<h2>Função de log-verossimilhança</h2>
+<p><span class="math display">\[
+\begin{align*}
+        l(\underline{\theta}; &amp;\underline{y}) = \sum_{i = 1}^n
+        \textbf{1}^* \left ( \log( 1-f_{z_i}(0)) + \log(f_{c_i})
+        \right ) + \\
+        &amp;\sum_{i = 1}^n (1-\textbf{1}^*) \left ( \log(f_{z_i}(0) +
+        (1-f_{z_i}(0))f_{c_i}(0)) \right )
+    \end{align*}
+\]</span></p>
+<p>Sendo <span class="math inline">\(\textbf{1}^*\)</span> a função indicadora que assume o valor 1 se <span class="math inline">\(y &gt; 0\)</span> e 0 se <span class="math inline">\(y = 0\)</span> e <span class="math inline">\(\underline{\theta}\)</span> o vetor de parâmetros do modelo ( <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\gamma\)</span> e <span class="math inline">\(\phi\)</span>, se houver).</p>
+</section></section>
+<section class="title-slide slide level1 center">
+<h1>No R!</h1>
+
+</section>
+
+<section class="title-slide slide level1 center">
+<h1>Modelos Zero Inflated no R</h1>
+<p>Temos o pacote pscl (Political Science Computational Laboratory, Stanford University) e o pacote VGAM(Vector Generalized Linear and Additive Models).</p>
+<pre><code>library(pscl)
+zeroinfl(y ~ fc_preditor | fz_preditor, dist = "poisson", link = "logit")
+
+library(VGAM)
+vglm(y ~ preditor, family = zipoisson)
+
+</code></pre>
+</section>
+
+<section class="title-slide slide level1 center">
+<h1>Exemplo no R!</h1>
+<p>Temos a base <em>bioChemists</em> que temos uma amostra de 915 bioquímicos graduados.</p>
+<p>Sendo:</p>
+<ul>
+<li>art: O número de artigos producidos nos últimos 3 anos de Doutorado</li>
+<li>fem: Gênero do estudande</li>
+<li>mar: Estado cívil</li>
+<li>kid5: Se tem filhos até 5 anos</li>
+<li>phd: prestígio do departamento de doutoramento</li>
+<li>ment: Artigos produzidos por orientador de doutorado nos últimos 3 anos</li>
+</ul>
+</section>
+
+<section class="title-slide slide level1 center">
+<h1>Análise Explolátoria</h1>
 <div class="cell">
 <div class="cell-output-display">
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" width="960"></p>
+<table>
+<colgroup>
+<col style="width: 11%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 7%">
+<col style="width: 3%">
+<col style="width: 15%">
+<col style="width: 11%">
+<col style="width: 4%">
+<col style="width: 8%">
+<col style="width: 11%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">sexo</th>
+<th style="text-align: right;">Média</th>
+<th style="text-align: right;">Mínimo</th>
+<th style="text-align: right;">Q1</th>
+<th style="text-align: right;">Q2</th>
+<th style="text-align: right;">Máximo</th>
+<th style="text-align: right;">Q3</th>
+<th style="text-align: right;">Desvio Padrão</th>
+<th style="text-align: right;">Amplitude</th>
+<th style="text-align: right;">IQR</th>
+<th style="text-align: right;">Curtose</th>
+<th style="text-align: right;">Assimtria</th>
+<th style="text-align: right;">CV</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Feminino</td>
+<td style="text-align: right;">1.47</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1.55</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5.49</td>
+<td style="text-align: right;">1.38</td>
+<td style="text-align: right;">1.06</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Masculino</td>
+<td style="text-align: right;">1.88</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">2.18</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">15.70</td>
+<td style="text-align: right;">2.67</td>
+<td style="text-align: right;">1.16</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<p><img src="images/logo.png" class="slide-logo"></p>
-<div class="footer footer-default">
-<p>Slides por <a href="Thalisreboucas.com.br">Thalis e Robert</a> (<span class="citation" data-cites="thalisreboucas">@thalisreboucas</span>), feito em <a href="https://quarto.org/docs/presentations/revealjs/index.html">Quarto</a>. Código disponível <a href="https://github.com/thalisreboucas/Regressao_poi_nb_infla_zeros">no GitHub</a>.</p>
+</section>
+
+<section class="title-slide slide level1 center">
+<h1>Outros Modelos</h1>
+<ul>
+<li>Modelos de Barreira Hurdle</li>
+<li>Modelo Poisson-Generalizada</li>
+<li>Modelo COM-Poisson</li>
+<li>Modelo Gamma-count</li>
+<li>Modelos de Efeito Aleatório</li>
+</ul>
+</section>
+
+<section class="title-slide slide level1 center">
+<h1>Referências</h1>
+<ul>
+<li><p>Paula, G. A. (2013). Modelos de regressão com apoio computacional. IME-USP, São Paulo.</p></li>
+<li><p>Winkelmann, R. (2008). Econometric analysis of count data (5th Ed.). Springer Science &amp; Business Media.</p></li>
+<li><p>CONSUL, P. C Generalized Poisson Distributions: Properties and Applications. Statistics: Textbooks and Monographs, New York: Marcel Dekker Inc.&nbsp;1989.</p></li>
+<li><p>Long, J. Scott. 1990. The origins of sex differences in science. Social Forces. 68(3):1297-1316.</p></li>
+<li><p>Long, J. Scott. 1997. Regression Models for Categorical and Limited Dependent Variables. Thousand Oaks, California: Sage.</p></li>
+</ul>
+
+<img src="images/logo.png" class="slide-logo r-stretch"><div class="footer footer-default">
+<p>Slides por <a href="Thalisreboucas.com.br">Thalis e Robert</a>, feito em <a href="https://quarto.org/docs/presentations/revealjs/index.html">Quarto</a>. Código disponível <a href="https://github.com/thalisreboucas/Regressao_poi_nb_infla_zeros">no GitHub</a>.</p>
 </div>
 </section>
     </div>

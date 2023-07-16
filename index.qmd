@@ -9,7 +9,7 @@ format:
     height: 900
     self-contained: false
     incremental: false
-    footer: "Slides por [Thalis e Robert](Thalisreboucas.com.br) (@thalisreboucas), feito em [Quarto](https://quarto.org/docs/presentations/revealjs/index.html). Código disponível [no GitHub](https://github.com/thalisreboucas/Regressao_poi_nb_infla_zeros)."
+    footer: "Slides por [Thalis e Robert](Thalisreboucas.com.br), feito em [Quarto](https://quarto.org/docs/presentations/revealjs/index.html). Código disponível [no GitHub](https://github.com/thalisreboucas/Regressao_poi_nb_infla_zeros)."
     theme: ["custom.scss"]
     slide-number: c/t
     show-slide-number: all
@@ -308,7 +308,32 @@ ggplot(data, aes(x = as.factor(x), y = y, fill = distribuicao)) +
 
 ## Excessos de zeros
 
-*colocar grafico *
+```{r}
+
+psi <- 0.2  # Parâmetro "psi" da distribuição Zero-Inflated Poisson
+
+# Valores possíveis para o eixo x
+x_values <- 0:30
+
+# Cálculo das probabilidades da Zero-Inflated Poisson
+zip_probs <- ifelse(x_values == 0, psi + (1 - psi) * dpois(x_values, lambda), (1 - psi) * dpois(x_values, lambda))
+
+# Criação do data frame para o gráfico
+data <- data.frame(x = rep(x_values, 3),
+                   y = zip_probs,
+                   distribuicao = rep("Zero-Inflated Poisson"), each = length(x_values))
+
+# Plot do gráfico
+
+ggplot(data, aes(x = as.factor(x), y = y, fill = distribuicao)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Valores", y = "Probabilidades", fill = "Distribuição") +
+  scale_fill_manual(values = "lightblue4") + 
+  ggtitle("Gráfico da Zero-Inflated Poisson") +
+  theme_minimal()
+
+```
+
 
 ## Causas desses zeros 
 
@@ -348,14 +373,15 @@ deve-se considerar ambos. As principais abordagens nestes casos são via:
 
 É um modelo que considera uma mistura de modelos,ou seja, seria um modelo sem restrições ou trucamentos e outros com restrições à direita do ponto $y$ igual a um.Além disso, os zeros são caracterizados em amostrais e estruturais.
 
-## Definições 
-#### Distribuição de Probabilidade
+### Definições 
+-  Distribuição de Probabilidade
 
 $$
 Pr(Y=y) = \begin{cases} f_z(0) + 1(-f_z(0))f_c(Y=y) ,&\ se \ y =0 \\
 (1-f_z(0))f_c(Y=y) ,& \ se \ y > \ 0   \end{cases}
 $$
-#### Momentos
+
+# Momentos
 
  - Média
 
@@ -381,6 +407,8 @@ $$
 
 *obs:* Mesmo assim $f_c$ pode apresntar sub,superdispersão ou excesso de valores em outro ponto.
 
+# Comparação da Poisson,binomial e Zero Inflated
+
 ```{r}
 # Função para calcular as probabilidades da distribuição binomial negativa
 negative_binomial_probs <- function(x, size, prob) {
@@ -388,7 +416,7 @@ negative_binomial_probs <- function(x, size, prob) {
 }
 
 # Parâmetros das distribuições
-size <- 10  # Parâmetro "size" da distribuição binomial negativa
+size <- 6  # Parâmetro "size" da distribuição binomial negativa
 prob <- 0.5  # Parâmetro "prob" da distribuição binomial negativa
 lambda <- 5  # Parâmetro "lambda" da distribuição Poisson
 psi <- 0.2  # Parâmetro "psi" da distribuição Zero-Inflated Poisson
@@ -411,11 +439,194 @@ data <- data.frame(x = rep(x_values, 3),
 ggplot(data, aes(x = as.factor(x), y = y, fill = distribuicao)) +
   geom_bar(stat = "identity", position = "dodge") +
   labs(x = "Valores", y = "Probabilidades", fill = "Distribuição") +
-  scale_fill_manual(values = c("gray10" , "black","lightblue4")) + 
+  scale_fill_manual(values = c("purple4" , "black","lightblue4")) + 
   ggtitle("Comparação de Distribuições Binomial Negativa, Poisson e Zero-Inflated Poisson") +
   theme_minimal()
 
 ```
 
+# Modelo Zero Inflated
+
+Consideram uma mistura de modelos;
+
+- Os zeros agora são caracterizados em amostrais e estruturais;
+- Há contribuição para estimação da probabilidade em zero de duas funções de probabilidade;
+- São chamados de modelos de mistura ou inflacionados de zero (Z I);
+- Esta abordagem “mistura“ um modelo de contagem sem restrição e um modelo censurado à
+direita no ponto y = 1.
+
+# Modelo Zero Inflated
+
+Distribuição de Probabilidade:
+$$
+    Pr(Y = y) =
+    \begin{cases}
+        f_z(0) + (1-f_z(0))f_c(Y=y) & \text{se } y = 0,\\
+            (1 - f_z(0)) f_c(Y = y) & \text{se } y = 1, 2, \dots
+    \end{cases}
+$$
+Média e Variância :
+$$
+  \begin{cases}
+        E(Y) = (1-f_z(0)E(Y^*)\\
+        V(Y) = (1-f_z(0)E(Y^*)[ E({Y^*}^2) - (1- f_z(0)E^2(Y^*)]
+    \end{cases}
+  $$
+
+
+# Misturas mais comuns
+
+Pode-se propor diferentes distribuições para $f_z$ e $f_c$. Uma
+escolha natural para $f_z$ é a Bernoulli e para $f_c$ a Poisson. Assim
+
+$$
+\begin{align}
+    &f_z \sim Bernoulli(\pi) \\
+    &f_c \sim Poisson(\lambda)
+\end{align}
+
+
+$$
+Sendo ,
+$$
+P(Y = y) = \begin{cases}
+        (1 - \pi) + \pi e^{-\lambda} & \text{se } y = 0,\\
+        \pi \left ( \frac{e^{-\lambda} \lambda^y}{y!} \right ) &
+            \text{se } y = 1, 2, \dots
+    \end{cases}
+
+$$
+
+Embora essa escolha de modelo seja o que tem o maior suporte
+computacional, ressalta-se que outras distribuições podem ser escolhidas
+para ambas as partes $f_z$ e $f_c$.
+
+# Fazendo Regressões com essa misturas.
+
+- Incorporando covariáveis em $f_z$ e $f_c$ na forma $h(Z\gamma)$ e $g(X\beta)$, respectivamente.
+- As funções $h(.)$ e $g(.)$, são as funções de ligação escolhidas conforme modelos $f_z$ e $f_c$.
+- O modelo de regressão {\it Hurdle} terá, portanto, os vetores de parâmetros $\beta$, $\gamma$ e potencialmente $\phi$ (caso um modelo com parâmetro de dispersão for considerado)
+- Como agora são modelos misturados a comparação entre $\beta$ e $\gamma$ não tem a mesma interpretabilidade.
+- Para comparação de modelos tradicionais contra os modelos de mistura, o teste de Vuong para modelos não aninhados pode ser aplicado.
+
+# Funções de Verossimilhaça para Zero Inflated
+## Função de verossimilhança
+$$
+ \begin{align*}
+        L(\underline{\theta}; &\underline{y}) = 
+        \prod_{i=1}^n \textbf{1}^* \left ( (1-f_{z_i}(0)) f_{c_i}(y_i)
+            \right ) \cdot \\
+        &\prod_{i=1}^n (1-\textbf{1}^*) \left ( f_{z_i}(0) + 
+        (1-f_{z_i}(0))f_{c_i}(0)
+        \right )
+    \end{align*}
+$$
+
+Sendo $\textbf{1}^*$ a função indicadora que assume o valor 1 se $y > 0$ e 
+0 se $y = 0$ e $\underline{\theta}$ o vetor de parâmetros do modelo (
+$\beta$, $\gamma$ e $\phi$, se houver).
+
+
+## Função de log-verossimilhança
+$$
+ \begin{align*}
+        l(\underline{\theta}; &\underline{y}) = \sum_{i = 1}^n 
+        \textbf{1}^* \left ( \log( 1-f_{z_i}(0)) + \log(f_{c_i})
+        \right ) + \\
+        &\sum_{i = 1}^n (1-\textbf{1}^*) \left ( \log(f_{z_i}(0) + 
+        (1-f_{z_i}(0))f_{c_i}(0)) \right )
+    \end{align*}
+$$
+
+Sendo $\textbf{1}^*$ a função indicadora que assume o valor 1 se $y > 0$ e 
+0 se $y = 0$ e $\underline{\theta}$ o vetor de parâmetros do modelo (
+$\beta$, $\gamma$ e $\phi$, se houver).
+
+# No R!
+
+# Modelos Zero Inflated no R
+
+Temos o pacote pscl (Political Science Computational Laboratory, Stanford University) e o pacote VGAM(Vector Generalized Linear and Additive Models).
+
+```{}
+library(pscl)
+zeroinfl(y ~ fc_preditor | fz_preditor, dist = "poisson", link = "logit")
+
+library(VGAM)
+vglm(y ~ preditor, family = zipoisson)
+
+
+```
+
+# Exemplo no R!
+
+Temos a base *bioChemists* que temos uma amostra de 915 bioquímicos graduados.  
+
+```{r}
+dados <- pscl::bioChemists
+
+```
+
+Sendo:
+
+- art: O número de artigos producidos nos últimos 3 anos de Doutorado
+- fem: Gênero do estudande
+- mar: Estado cívil 
+- kid5: Se tem filhos até 5 anos
+- phd: prestígio do departamento de doutoramento
+- ment: Artigos produzidos por orientador de doutorado nos últimos 3 anos
+
+
+# Análise Explolátoria 
+
+```{r}
+dados |> 
+  dplyr::mutate(sexo = dplyr::case_when(fem == "Men" ~"Masculino" ,
+                                 fem == "Women" ~"Feminino")) |> 
+  dplyr::group_by(sexo) |> 
+  dplyr::select(art) |> 
+  dplyr::summarise_all(c(
+    "Média" = mean,
+    "Mínimo" = min,
+    "Q1" = ~(quantile(.x, 0.25)),
+    "Q2" = median,
+    "Máximo" = max,
+    "Q3" = ~(quantile(.x, 0.75)),
+    "Desvio Padrão" = sd,
+    "Amplitude" = ~(max(.x)-min(.x)),
+    "IQR" = IQR,
+    "Curtose" = moments::kurtosis,
+    "Assimtria" = moments::skewness,
+    "CV" = ~(sd(.x)/mean(.x))  )) |> knitr::kable(digits = round(2))
+
+
+```
+
+
+
+# Outros Modelos 
+
+- Modelos de Barreira Hurdle
+- Modelo Poisson-Generalizada
+- Modelo COM-Poisson
+- Modelo Gamma-count
+- Modelos de Efeito Aleatório
+
+
+
+
+# Referências 
+
+- Paula, G. A. (2013). Modelos de regressão com apoio computacional. IME-USP, São Paulo.
+
+- Winkelmann, R. (2008). Econometric analysis of count data (5th Ed.). Springer Science & Business Media.
+
+- CONSUL, P. C
+Generalized Poisson Distributions: Properties and Applications. Statistics: Textbooks and Monographs,
+New York: Marcel Dekker Inc. 1989.
+
+- Long, J. Scott. 1990. The origins of sex differences in science. Social Forces. 68(3):1297-1316.
+
+- Long, J. Scott. 1997. Regression Models for Categorical and Limited Dependent Variables. Thousand Oaks, California: Sage.
 
 
