@@ -551,10 +551,7 @@ Temos o pacote pscl (Political Science Computational Laboratory, Stanford Univer
 ```{}
 library(pscl)
 zeroinfl(y ~ fc_preditor | fz_preditor, dist = "poisson", link = "logit")
-
-library(VGAM)
-vglm(y ~ preditor, family = zipoisson)
-
+zeroinfl(y ~ fc_preditor | fz_preditor, dist = "negbin", link = "logit")
 
 ```
 

@@ -702,10 +702,7 @@ Sendo ,
 <p>Temos o pacote pscl (Political Science Computational Laboratory, Stanford University) e o pacote VGAM(Vector Generalized Linear and Additive Models).</p>
 <pre><code>library(pscl)
 zeroinfl(y ~ fc_preditor | fz_preditor, dist = "poisson", link = "logit")
-
-library(VGAM)
-vglm(y ~ preditor, family = zipoisson)
-
+zeroinfl(y ~ fc_preditor | fz_preditor, dist = "negbin", link = "logit")
 </code></pre>
 </section>
 

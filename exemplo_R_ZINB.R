@@ -102,26 +102,45 @@ boxp(dados$kid5,"Número de crianças até 5 anos")
 boxp(dados$phd,"Nota do phd")
 boxp(dados$ment,"Número de artigos publicados por orientados")
 
+############# Outros grafico 
+
+dados |>  dplyr::mutate(sexo = dplyr::case_when(fem == "Men" ~"Masculino" ,
+                                                fem == "Women" ~"Feminino")) |>
+plotly::plot_ly(x = ~kid5, y = ~art , colors = cc ,type = 'scatter') 
 
 
-# Ajustar o modelo ZINB
-modelo <- zeroinfl(art ~ fem + kid5, data = bioChemists,
+
+
+# Ajustar o modelo sem inflação
+#  o ponto (.) é a soma de todos as outras colunas do dataset
+mod_neg <- pscl::zeroinfl(art ~ ., data = dados,
                    dist = "negbin", link = "logit")
 
-# Sum?rio do modelo
-summary(modelo)
-require(hnp)
-hnp(modelo)
+mod_poi <- pscl::zeroinfl(art ~ ., data = dados,
+                   dist = "poisson", link = "logit")
 
-residuos <- residuals(modelo)
-plot(predict(modelo), residuos)
-abline(h = 0, col = "red")
+# Ajustando com uma inflação simples (sem regressores para os zeros)
+
+mod_1_neg <- pscl::zeroinfl(art ~ .|1, data = dados,
+                          dist = "negbin", link = "logit")
+
+mod_1_poi <- pscl::zeroinfl(art ~ .|1, data = dados,
+                          dist = "poisson", link = "logit")
 
 
-modelo2 <- zeroinfl(art ~ fem + kid5+ment, data = bioChemists,
-                   dist = "negbin", link = "logit")
-summary(modelo2)
-hnp(modelo2)
-residuos <- residuals(modelo2)
-plot(predict(modelo2), residuos)
-abline(h = 0, col = "red")
+# Ajustando com os valores inflacionados 
+# ("art ~ . | ." is "art ~ fem + mar + kid5 + phd + ment | fem + mar + kid5 + phd + ment")
+
+zero_neg <- pscl::zeroinfl(art ~ .|., data = dados,
+                            dist = "negbin", link = "logit")
+
+zero_poi <- pscl::zeroinfl(art ~ .|., data = dados,
+                            dist = "poisson", link = "logit")
+
+# comparação dos modelos
+performance::compare_performance(mod_neg,mod_poi)
+performance::compare_performance(mod_1_neg,mod_1_poi)
+performance::compare_performance(zero_neg,zero_poi)
+
+
+# Analise de residuos
