@@ -181,6 +181,34 @@ grafico_box <- plot_ly(
                      yaxis = list(title = 'Resíduos') )
 
 
+
+G_AJUSTE <- plot_ly(
+  y= ~fitted(modelo),type = 'scatter',
+  marker = list(size = 5 , color = "#1A1A1A")) |> 
+  plotly::layout(title = 'Gráficos de disperssão do ajuste do modelo',
+                 xaxis = list(title = ''),
+                 yaxis = list(title = 'Valores ajustados') )
+G_LINEAR <- plot_ly(
+  y = ~residuals(modelo),
+  x= ~fitted(modelo),
+  type = 'scatter',
+  marker = list(size = 5 , color = "#1A1A1A")) |> 
+  plotly::layout(title = 'Gráficos de linearidade',
+                 xaxis = list(title = 'Valores Ajustados'),
+                 yaxis = list(title = 'Resíduos') )
+
+G_HOMO <- plot_ly(
+  y = ~sqrt(residuals(modelo)),
+  x= ~fitted(modelo),
+  type = 'scatter',
+  marker = list(size = 5 , color = "#1A1A1A")) |> 
+  plotly::layout(title = 'Gráficos de homogeneidade de variância',
+                 xaxis = list(title = 'Valores Ajustados'),
+                 yaxis = list(title = 'Desvio padrão dos resíduos') )
+
+
+
+
 ## Anova
 anova <- car::Anova(modelo) 
 
@@ -189,8 +217,8 @@ vcov <- vcov(modelo)
 summa <- summary(modelo)
 
 
-lista <- list(grafico_hnp,grafico_box,anova,vcov,summa)
-names(lista) <-c("HNP","BOXPLOT","ANOVA","VCOV","SUMMARY")
+lista <- list(grafico_hnp,grafico_box,anova,vcov,summa,G_AJUSTE,G_HOMO,G_LINEAR)
+names(lista) <-c("HNP","BOXPLOT","ANOVA","VCOV","SUMMARY","AJUSTE","HOMOGVAR","LINEAR")
 
 return(lista)
 
@@ -204,3 +232,8 @@ res_zn$ANOVA
 res_zn$BOXPLOT
 #res_zn$VCOV
 
+
+
+# comparação
+test_performance(mod_1_neg,mod_1_poi)
+test_performance(mod_neg,mod_poi)
