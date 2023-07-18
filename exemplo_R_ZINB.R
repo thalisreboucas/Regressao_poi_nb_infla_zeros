@@ -12,8 +12,8 @@ head(dados)
 eda_G <- function(variavel) {
 dados |> 
   dplyr::mutate(sexo = dplyr::case_when(fem == "Men" ~"Masculino" ,
-                                        fem == "Women" ~"Feminino")) |> 
-  dplyr::group_by(sexo) |> 
+                                        fem == "Women" ~"Feminino")) |>
+  dplyr::group_by(sexo) |>
   dplyr::select(variavel) |> 
   dplyr::summarise_all(c(
     "Média" = mean,
@@ -40,8 +40,6 @@ purrr::map(c("art",
 # exploratoria dos dados geral
 eda <- function(variavel) {
   dados |> 
-    dplyr::mutate(sexo = dplyr::case_when(fem == "Men" ~"Masculino" ,
-                                          fem == "Women" ~"Feminino")) |> 
     dplyr::select(variavel) |> 
     dplyr::summarise_all(c(
       "Média" = mean,
@@ -56,7 +54,8 @@ eda <- function(variavel) {
       "Curtose" = moments::kurtosis,
       "Assimtria" = moments::skewness,
       "CV" = ~(sd(.x)/mean(.x)),
-      "nobs" = length )) |> knitr::kable(digits = round(2)) }
+      "nobs" = length )) |> 
+      knitr::kable(digits = round(2)) }
 
 purrr::map(c("art",
              "kid5",
@@ -104,44 +103,35 @@ boxp(dados$ment,"Número de artigos publicados por orientados")
 
 ############# Outros grafico 
 
+cc <- c( '#330066','#003366')
+
 dados |>  dplyr::mutate(sexo = dplyr::case_when(fem == "Men" ~"Masculino" ,
                                                 fem == "Women" ~"Feminino")) |>
 plotly::plot_ly(x = ~kid5, y = ~art , colors = cc ,type = 'scatter') 
 
 
 
+# Ajustar o modelo de inflação
 
-# Ajustar o modelo sem inflação
+# Ajustando com uma inflação simples (sem regressores para os zeros)
+
+mod_1_neg <- pscl::zeroinfl(art ~ .|1, data = dados,
+                            dist = "negbin", link = "logit")
+
+mod_1_poi <- pscl::zeroinfl(art ~ .|1, data = dados,
+                            dist = "poisson", link = "logit")
+# 
 #  o ponto (.) é a soma de todos as outras colunas do dataset
+#   art ~ fem + mar + kid5 + phd + ment
 mod_neg <- pscl::zeroinfl(art ~ ., data = dados,
                    dist = "negbin", link = "logit")
 
 mod_poi <- pscl::zeroinfl(art ~ ., data = dados,
                    dist = "poisson", link = "logit")
 
-# Ajustando com uma inflação simples (sem regressores para os zeros)
-
-mod_1_neg <- pscl::zeroinfl(art ~ .|1, data = dados,
-                          dist = "negbin", link = "logit")
-
-mod_1_poi <- pscl::zeroinfl(art ~ .|1, data = dados,
-                          dist = "poisson", link = "logit")
-
-
 
 performance::compare_performance(mod_neg,mod_1_neg,mod_poi,mod_1_poi)
-
-
-# Ajustando com os valores inflacionados 
-# ("art ~ . | ." is "art ~ fem + mar + kid5 + phd + ment | fem + mar + kid5 + phd + ment")
-
-zero_neg <- pscl::zeroinfl(art ~ .|., data = dados,
-                            dist = "negbin", link = "logit")
-
-zero_poi <- pscl::zeroinfl(art ~ .|., data = dados,
-                            dist = "poisson", link = "logit")
-
-
+ 
 #Analise de resíduos
 
 analises_res_zi <- function(modelo){
@@ -206,11 +196,11 @@ return(lista)
 
 }
 
-res_zn <- analises_res_zi(zero_neg)
+res_zn <- analises_res_zi(mod_neg)
+#res_zn <- analises_res_zi(mod_poi)
 res_zn$SUMMARY
 res_zn$HNP
+res_zn$ANOVA
 res_zn$BOXPLOT
 #res_zn$VCOV
-
-faoutlier::gCD(dados,zero_neg)
 

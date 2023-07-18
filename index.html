@@ -344,8 +344,8 @@ Thalis Rebouças e Robert Oliveira
 <p>⬜ O que é o Regressão Poisson?</p>
 <p>⬜ O que é o Regressão Binomial Negativa?</p>
 <p>⬜ O que é o que é ser inflâcionada por zeros?</p>
-<p>⬜ Exemplo de aplicação real</p>
 <p>⬜ Aplicação no R!</p>
+<p>⬜ Referência</p>
 </section>
 <section>
 <section class="title-slide slide level1 center">
@@ -509,7 +509,22 @@ g\left ( \theta;\alpha,\beta \right )=\frac{\beta^{\alpha}}{\Gamma\left ( \alpha
 <li><p>Para valores fixados de <span class="math inline">\(\alpha\)</span>, a distribuição binomial negativa fica expressa na forma da família exponencial linear, contemplada pela teoria de MLG.</p></li>
 <li><p>A estimação dos parâmetros do modelo se dá numericamente, segundo um algoritmo em duas etapas, em que <span class="math inline">\(\alpha\)</span> e <span class="math inline">\(\boldsymbol{\beta}\)</span> são estimados condicionalmente até convergência.</p></li>
 </ul>
-</section></section>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"></section></section>
+<section class="title-slide slide level1 center">
+<h1>Estimativas</h1>
+<p>As estimativas para <span class="math inline">\(\beta\)</span> e <span class="math inline">\(\phi\)</span> podem ser obtidas pelo algoritmo de mínimos quadrados ponderados:</p>
+<p><span class="math display">\[
+\beta^{(m+1)} = (X^T W^{(m)}X)^{-1}X^TW^{(m)}y^{*(m)} \\
+\phi^{(m+1)}=\phi^{(m)}-\left( \dfrac{U_\phi^{(m)}}{L_\phi^{(m)}} \right)
+\]</span> Para m = 1,2,…, em que :</p>
+<p><span class="math display">\[
+y^{*} = X\beta+F^{-1}(y-\mu) \\
+L_{\phi} = \sum_{i=1}^n\left(\psi'(\phi+y_i)+\dfrac{y_i-2\mu_i-\phi}{(\phi-\mu_i)^2}\right) + n\phi^{-1}(1-\phi\psi'(\phi))
+\]</span></p>
+<p>Onde o algoritmo de estimação para <span class="math inline">\(\beta\)</span> e <span class="math inline">\(\phi\)</span> são simultâneos, onde $w_i = () &nbsp;e &nbsp;f_i= $</p>
+</section>
+
 <section>
 <section class="title-slide slide level1 center">
 <h1>O que é ser Inflacionda de <em>zeros</em> ?</h1>
@@ -526,7 +541,7 @@ g\left ( \theta;\alpha,\beta \right )=\frac{\beta^{\alpha}}{\Gamma\left ( \alpha
 <section class="slide level2">
 <h2>Excessos de zeros</h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
 <section class="slide level2">
 <h2>Causas desses zeros</h2>
 <ul>
@@ -601,7 +616,7 @@ Var(Y) = 1-f_z(0)E(Y^*) [E(Y^{*^2})-(1-f_z(0)E^2(Y^*))]
 <section class="title-slide slide level1 center">
 <h1>Comparação da Poisson,binomial e Zero Inflated</h1>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" width="960" class="r-stretch"></section>
 
 <section class="title-slide slide level1 center">
 <h1>Modelo Zero Inflated</h1>

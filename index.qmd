@@ -27,9 +27,11 @@ Vamos explicar um pouco sobre
 
 ⬜ O que é o que é ser inflâcionada por zeros?
 
-⬜ Exemplo de aplicação real
-
 ⬜ Aplicação no R!
+
+⬜ Referência
+
+
 
 
 # Vamos lá!
@@ -328,6 +330,25 @@ ggplot2::ggplot() +
   labs(x = "Variável X", y = "Contagem Y", title = "Regressão Binomial Negativa") +
   theme_minimal()
 ```
+
+# Estimativas 
+
+As estimativas para $\beta$ e $\phi$ podem ser obtidas pelo algoritmo de
+mínimos quadrados ponderados:
+
+$$
+\beta^{(m+1)} = (X^T W^{(m)}X)^{-1}X^TW^{(m)}y^{*(m)} \\
+\phi^{(m+1)}=\phi^{(m)}-\left( \dfrac{U_\phi^{(m)}}{L_\phi^{(m)}} \right)
+$$
+Para m = 1,2,..., em que :
+
+$$
+y^{*} = X\beta+F^{-1}(y-\mu) \\
+L_{\phi} = \sum_{i=1}^n\left(\psi'(\phi+y_i)+\dfrac{y_i-2\mu_i-\phi}{(\phi-\mu_i)^2}\right) + n\phi^{-1}(1-\phi\psi'(\phi))
+$$
+
+Onde o algoritmo de estimação para $\beta$ e $\phi$ são simultâneos,
+onde $w_i = \dfrac{1}{(\mu_i+\mu_i^2\phi^{-1})}(\dfrac{d\mu_i}{dn_i}) \ e \ f_i=\dfrac{d\mu_i}{dn_i} $
 
 
 # O que é ser Inflacionda de *zeros* ?
