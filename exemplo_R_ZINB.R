@@ -1,5 +1,5 @@
 # pacotes nescessarios
-pacman::p_load(plotly,pscl,dplyr)
+pacman::p_load(plotly,pscl,tidyverse,easystats,glmtoolbox,tidymodels)
 
 # Carregar o conjunto de dados
 dados <- pscl::bioChemists
@@ -128,6 +128,10 @@ mod_1_poi <- pscl::zeroinfl(art ~ .|1, data = dados,
                           dist = "poisson", link = "logit")
 
 
+
+performance::compare_performance(mod_neg,mod_1_neg,mod_poi,mod_1_poi)
+
+
 # Ajustando com os valores inflacionados 
 # ("art ~ . | ." is "art ~ fem + mar + kid5 + phd + ment | fem + mar + kid5 + phd + ment")
 
@@ -137,10 +141,76 @@ zero_neg <- pscl::zeroinfl(art ~ .|., data = dados,
 zero_poi <- pscl::zeroinfl(art ~ .|., data = dados,
                             dist = "poisson", link = "logit")
 
-# comparação dos modelos
-performance::compare_performance(mod_neg,mod_poi)
-performance::compare_performance(mod_1_neg,mod_1_poi)
-performance::compare_performance(zero_neg,zero_poi)
+
+#Analise de resíduos
+
+analises_res_zi <- function(modelo){
+g1 <- hnp::hnp(modelo)
+
+df_g1  <- data.frame(
+  x = g1$x,
+  lower = g1$lower,
+  median = g1$median,
+  upper = g1$upper,
+  residuals = g1$residuals
+)
+
+grafico_hnp <- ggplotly(
+ggplot(df_g1, aes(x)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper),
+              alpha = 0.2) +
+  geom_point(aes(y = residuals),colour = "gray10",size = 2) +
+  geom_line(aes(y = median) , colour = "#FF4500")  +
+  labs(x = "Quantis Teóricos ",title = "QQNorm dos Resíduos para distribuição normal" , y = "Quantis da Amostra")+theme_minimal())
 
 
-# Analise de residuos
+grafico_box <- plot_ly(
+  y = ~residuals(modelo),
+  type = 'violin',
+  box = list(
+    visible = T
+  ),
+  meanline = list(
+    visible = T
+  ),
+  color = I("gray10"),
+  points = 'all',
+  jitter = 0,
+  scalemode = 'count',
+  meanline = list(
+    visible = T
+  ),
+  marker = list(
+    line = list(
+      width = 2
+    ),
+    symbol = 'line-ns'
+  )
+) |>  plotly::layout(title = 'Gráficos Boxplot dos resíduos',
+                     xaxis = list(title = ''), 
+                     yaxis = list(title = 'Resíduos') )
+
+
+## Anova
+anova <- car::Anova(modelo) 
+
+vcov <- vcov(modelo)
+
+summa <- summary(modelo)
+
+
+lista <- list(grafico_hnp,grafico_box,anova,vcov,summa)
+names(lista) <-c("HNP","BOXPLOT","ANOVA","VCOV","SUMMARY")
+
+return(lista)
+
+}
+
+res_zn <- analises_res_zi(zero_neg)
+res_zn$SUMMARY
+res_zn$HNP
+res_zn$BOXPLOT
+#res_zn$VCOV
+
+faoutlier::gCD(dados,zero_neg)
+

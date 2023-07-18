@@ -291,6 +291,45 @@ ggplot(data, aes(x = as.factor(x), y = y, fill = distribuicao)) +
 
 - A estimação dos parâmetros do modelo se dá numericamente, segundo um algoritmo em duas etapas, em que $\alpha$ e $\boldsymbol{\beta}$ são estimados condicionalmente até convergência.
 
+
+```{r}
+require(ggplot2)
+# Gerar dados simulados
+x <- seq(1, 10, length.out = 100)
+size <- exp(0.5 + 0.2 * x)
+prob <- 0.3
+y <- rnbinom(length(x), size = size, prob = prob)
+
+# Ajustar modelo de regressão binomial negativa
+model <- MASS::glm.nb(y ~ x)
+
+# Prever valores ajustados
+predicted <- predict(model, type = "response", se.fit = TRUE)
+
+# Criar data frame com os valores
+data <- data.frame(x = x, y = predicted$fit, ymin = predicted$fit - 1.96 * predicted$se.fit, 
+                   ymax = predicted$fit + 1.96 * predicted$se.fit)
+
+# Obter os coeficientes estimados
+intercept <- coef(model)[1]
+slope <- coef(model)[2]
+
+# Função para formatar a fórmula estimada da reta
+format_formula <- function(intercept, slope) {
+  paste0("y = NegBin(", round(intercept, 2), " + ", round(slope, 2), "x)")
+}
+
+# Plot do gráfico
+ggplot2::ggplot() +
+  geom_ribbon(data = data, aes(x = x, ymin = ymin, ymax = ymax), fill = "lightblue", alpha = 0.5) +
+  geom_line(data = data, aes(x = x, y = y), color = "lightblue3", size = 1) +
+  geom_point(data = data.frame(x, y), aes(x = x, y = y), color = "gray10", size = 2) +
+  geom_text(x = 1, y = max(predicted$fit), label = format_formula(intercept, slope), hjust = 0, vjust = 1) +
+  labs(x = "Variável X", y = "Contagem Y", title = "Regressão Binomial Negativa") +
+  theme_minimal()
+```
+
+
 # O que é ser Inflacionda de *zeros* ?
 
 
