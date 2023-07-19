@@ -1,7 +1,7 @@
 ---
 title: "Regressão Poisson e Binomial Negativa inflâcionada de **ZEROS!!!**"
 author: "Thalis Rebouças e Robert Oliveira"
-date: "20 Junho 2023"
+date: "19 Julho 2023"
 format: 
   revealjs:
     logo: "images/logo.png"
@@ -167,9 +167,16 @@ Em que $\beta$(beta) é o vetor de  parâmetros do regressão.
 
 ## Propriedades
 
+\
+
 - $f(y_{i}|\boldsymbol{x_{i}})=\frac{e^{-\exp(\boldsymbol{x'_i\beta})}{\exp({\boldsymbol{x'_i\beta}})}^{y_i}}{y_i!}$
 
+\
+
 - $E\left [ y_{i}|\boldsymbol{x_{i}} \right ]= \mu_{i}=\exp\left ( \boldsymbol{x'_{i}\beta} \right )$
+
+\
+
 
 - $Var\left [ y_{i}|\mathbf{x_{i}} \right ]= \mu_{i}=\exp\left ( \boldsymbol{x'_{i}\beta} \right )$
 
@@ -293,6 +300,7 @@ ggplot(data, aes(x = as.factor(x), y = y, fill = distribuicao)) +
 
 - A estimação dos parâmetros do modelo se dá numericamente, segundo um algoritmo em duas etapas, em que $\alpha$ e $\boldsymbol{\beta}$ são estimados condicionalmente até convergência.
 
+# Gráfico da regresão da binomial negativa
 
 ```{r}
 require(ggplot2)
@@ -340,6 +348,9 @@ $$
 \beta^{(m+1)} = (X^T W^{(m)}X)^{-1}X^TW^{(m)}y^{*(m)} \\
 \phi^{(m+1)}=\phi^{(m)}-\left( \dfrac{U_\phi^{(m)}}{L_\phi^{(m)}} \right)
 $$
+
+# Estimativas
+
 Para m = 1,2,..., em que :
 
 $$
@@ -348,7 +359,10 @@ L_{\phi} = \sum_{i=1}^n\left(\psi'(\phi+y_i)+\dfrac{y_i-2\mu_i-\phi}{(\phi-\mu_i
 $$
 
 Onde o algoritmo de estimação para $\beta$ e $\phi$ são simultâneos,
-onde $w_i = \dfrac{1}{(\mu_i+\mu_i^2\phi^{-1})}(\dfrac{d\mu_i}{dn_i}) \ e \ f_i=\dfrac{d\mu_i}{dn_i} $
+onde :
+
+$w_i = \dfrac{1}{(\mu_i+\mu_i^2\phi^{-1})}(\dfrac{d\mu_i}{dn_i})$  e 
+$f_i=\dfrac{d \mu_i}{dn_i}$
 
 
 # O que é ser Inflacionda de *zeros* ?
